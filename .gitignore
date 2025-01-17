@@ -1,0 +1,16 @@
+ECHO is on.
+
+# Ignoring test folder
+D:/python/python_advanced/0_app/test
+
+# Ignore all files with name test
+*test.py
+
+# Ignore file extension type .pyc files
+*.pyc
+
+# Ignore scripting folder
+D:/python/python_advanced/scripts
+
+# Ignore Q&_questions file
+Q&A_questions.txt
