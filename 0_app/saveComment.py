@@ -9,7 +9,7 @@
 from maya import cmds
 
 
-#*********************************************************************
+#*********************************************************************s
 def saveComment():
 	user_input = cmds.promptDialog(title='Save Comment', 
 						message='Enter Comment:', 
@@ -21,5 +21,3 @@ def saveComment():
 	if user_input == "Ok":
 		comment = cmds.promptDialog(query=True, text=True)
 		
-
-

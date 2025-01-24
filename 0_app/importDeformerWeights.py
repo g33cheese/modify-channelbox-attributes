@@ -12,3 +12,10 @@ import os
 
 def importDeformerWeights():
 	pass
+
+
+def exportWeights(deformer_weight_type, name, path):
+	'''
+	Export deformer weights to file.
+	'''
+	cmds.deformerWeights('{0}.json'.format(name), im=True, deformer=deformer_weight_type, method=True, path='{0}'.format(path))
