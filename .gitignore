@@ -1,16 +1,23 @@
 ECHO is on.
 
-# Ignoring test folder
-D:/python/python_advanced/0_app/test
+# Folders #
+####################
+/0_app/test/
+/0_app/old/
+/scripts/
+/maya_files/
 
-# Ignore all files with name test
+# Files #
+####################
 *test.py
+Q&A_questions.txt
 
-# Ignore file extension type .pyc files
+
+
+# File types #
+####################
 *.pyc
 
-# Ignore scripting folder
-D:/python/python_advanced/scripts
 
-# Ignore Q&_questions file
-Q&A_questions.txt
+
+
