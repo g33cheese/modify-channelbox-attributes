@@ -2,5 +2,6 @@ ECHO is on.
 
 # Ignore everything in this directory
 *
+
 # Except this file
 !.gitignore
