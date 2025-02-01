@@ -9,7 +9,7 @@
 set "MAYA_VERSION=2023"
 
 :: PATH
-set "SCRIPT_PATH=D:/python/python_advanced/scripts/"
+set "SCRIPT_PATH=D:/python/python_advanced/0_app/"
 set "IMAGE_PATH=D:/python/python_advanced/1_tools/assignments/"
 set "PYTHONPATH=%SCRIPT_PATH%;%PYTHONPATH%"
 
