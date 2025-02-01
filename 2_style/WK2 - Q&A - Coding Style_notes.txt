@@ -1,0 +1,47 @@
+WK2 - Coding Style
+
+Discord
+Don't worry about time zone to ask your question. 
+Never ask a lazy question.
+
+
+
+The biggest benefit to coding style is that:
+1. it looks professional. 
+2. You give someone you work with professional code. 
+
+*You will immediately upgrade your code to junior/amateur to professional. 
+
+Modify Channelbox Attribute Tool
+-Mark: That would be great to have a reorder attribute feature. 
+
+
+WK 5 Q&A: We will each have 10-15 mins to present our tool. It is good practice for us to do at a company. 
+
+
+1. What is PEP8?
+A: A style guide. If you learn PEP8 you will be fine at 90% of companies. 
+Follow it to an 80-90%. 
+
+2. How does coding style improve your (team) work?
+A: The guidelines are the best guidelines. 
+
+* Alexander always wants the clearest answer. 
+
+3. What is your most important coding style rule?
+A: Alex: My favourite is one statement per line. 
+* If Alex sees an asterisk in a import he will flag that for a code review. He absolutely hates it. 
+Fabio - dividers
+Garvey - comments and chunking
+Mark - asterisks on import
+
+
+
+Alex: Don't underestimate the first impression of your code. 
+
+Alex: Here's an example. A lot of the code at Weta was old. If code is like that you cannot start a new way. Even though I wanted to write in PEP8 I couldn't because it would break the code. So I coded in the module's style. 
+
+*It will take 3 months for you to be comfortable with the coding style. 
+**Coding style is the first thing that Alex looks at during a code review. 
+
+Where does the Q&A video get saved?
