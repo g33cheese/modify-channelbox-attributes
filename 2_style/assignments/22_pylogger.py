@@ -7,25 +7,27 @@
 
 # original: logging.init.py
 
-def findCaller(self):
+def find_caller(self):
     """
-    Find the stack frame of the caller so that we can note the source
-    file name, line number and function name.
+    Find the stack frame of the caller.
     """
-    f = currentframe()
+    frame = currentframe()
     #On some versions of IronPython, currentframe() returns None if
     #IronPython isn't run with -X:Frames.
-    if f is not None:
-        f = f.f_back
-    rv = "(unknown file)", 0, "(unknown function)"
-    while hasattr(f, "f_code"):
-        co = f.f_code
-        filename = os.path.normcase(co.co_filename)
-        if filename == _srcfile:
-            f = f.f_back
+    if frame == True:
+        frame = frame.frame_back
+
+    review = "(unknown file)", 0, "(unknown function)"
+
+    while hasattr(frame, "f_code"):
+        code = frame.frame_code
+        file_name = os.path.normcase(code.code_filename)
+        if file_name == _srcfile:
+            frame = frame.f_back
             continue
-        rv = (co.co_filename, f.f_lineno, co.co_name)
+        review = (code.code_filename, frame.frame_line_no, code.code_name)
         break
-    return rv
+
+    return review
 
 # How can we make this code better?
