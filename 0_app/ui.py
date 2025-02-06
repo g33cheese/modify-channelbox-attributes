@@ -1,27 +1,27 @@
 #*********************************************************************
-# content	= ui for tool
+# content	= launches ui for modify channelbox attribute tool
 # version	= 0.1.0
 # date		= 2025-01-25
 # 
-# author	= Garvey Chi
+# how to 	= draw_ui()
+# to dos 	= channel attribute buttons' functionality. 
+# 			  add reorder attribute buttons.
+# 
+# author	= Garvey Chi (garveychi@gmail.com)
 #*********************************************************************
+'''Creates the UI for launching channelbox tools.'''
 
 from maya import mel
 from maya import cmds
-
-import modifyChannelAttrs as mod
-
 from functools import partial
+
+import modify_channel_attrs as mod
 
 from imp import reload
 reload(mod)
 
 
 def draw_ui():
-	'''
-	Creates the UI for launching channelbox tools
-	'''
-
 	#*********************************************************************
 	# UI
 	window_name = 'channelboxToolWindow'
@@ -29,7 +29,6 @@ def draw_ui():
 	if cmds.window(window_name, exists=True):
 		cmds.deleteUI(window_name, window=True)
 
-	# Window
 	cmds.window(window_name, title='ChannelBox Tools', sizeable=False, resizeToFitChildren=True)
 	cmds.rowColumnLayout(numberOfColumns=1, columnWidth=(1, 300))
 	cmds.separator(height=20, style='none')
@@ -40,7 +39,7 @@ def draw_ui():
 	cmds.separator(height=20, style='singleDash')
 	cmds.button(label='Reset Channels', command=lambda *args: mod.reset_channels())
 	cmds.separator(height=20, style='singleDash')
-	
+
 
 	#*********************************************************************
 	# Match Attributes
