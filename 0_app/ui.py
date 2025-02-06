@@ -76,8 +76,10 @@ def draw_ui():
 	cmds.button(label='Mute/Unmute Attribute')
 	cmds.button(label='Hide Attribute')
 	cmds.button(label='Unhide Last Hidden Attribute')
-	cmds.button(label='Lock/Hide Attribute')
+	cmds.button(label='Lock + Hide Attribute')
 	cmds.button(label='Keyable/Unkeyable Attribute')
+	cmds.button(label='^')
+	cmds.button(label='v')
 	cmds.separator(height=20, style='singleDash')
 
 
