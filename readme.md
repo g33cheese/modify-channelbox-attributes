@@ -24,7 +24,7 @@ These tools provide the ability to set, add, connect or change the state of an o
 
 ### **Add Attributes**
 * _Add Attribute_ - Add a custom attribute. User provides name and specifies attribute type via the dropdown menu. Attribute Types defaults to 'bool'. Provide a Min/Max value if desired for float or int types. 
-* _Add Separator_ - Create a channelbox divider. Name provided will be converted to uppercase. If no name is provided an underscored name will (ex. __ ) be created by default. 
+* _Add Separator_ - Create a channel box divider. Name provided will be converted to uppercase. If no name is provided an underscored name will (ex. __ ) be created by default. 
 
 ![add_attributes](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/tool_add_attributes.gif)
 
