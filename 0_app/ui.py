@@ -72,12 +72,17 @@ def draw_ui():
 	# Channel Attributes
 	cmds.text(label='Channel Attributes', align='left')
 	cmds.separator(height=20, style='singleDash')
-	cmds.button(label='Lock/Unlock Attribute')
-	cmds.button(label='Mute/Unmute Attribute')
-	cmds.button(label='Hide Attribute')
-	cmds.button(label='Unhide Last Hidden Attribute')
-	cmds.button(label='Lock + Hide Attribute')
-	cmds.button(label='Keyable/Unkeyable Attribute')
+	cmds.button(label='Lock/Unlock Attribute', command=lambda *args: mod.modify_attribute(
+				keyable=True, lock=True, channelBox=False))
+	cmds.button(label='Hide Attribute', command=lambda *args: mod.modify_attribute(
+				keyable=False, lock=False, channelBox=False))
+	cmds.button(label='Lock + Hide Attribute', command=lambda *args: mod.modify_attribute(
+				keyable=False, lock=True, channelBox=False))
+	cmds.button(label='Keyable/Unkeyable Attribute', command=lambda *args: mod.modify_attribute(
+				keyable=False, lock=False, channelBox=True))
+	cmds.button(label='Mute Attribute', command=lambda *args: mod.mute_attribute())
+	cmds.button(label='Unmute Attribute', command=lambda *args: mod.mute_attribute(
+				disable=True, force=True))
 	cmds.button(label='^')
 	cmds.button(label='v')
 	cmds.separator(height=20, style='singleDash')

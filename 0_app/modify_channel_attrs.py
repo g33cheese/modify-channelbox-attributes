@@ -72,7 +72,7 @@ def deselect_channels():
 def reset_channels():
 	'''	Reset selected channels in the channel box to default,
 	if nothing's selected resets all keyable channels to default.
-	'''	
+	'''
 	sel_list  = check_for_selection()
 	chan_list = check_cbox_attributes()[1]
 	for obj in sel_list:
@@ -145,20 +145,56 @@ def add_separator(attribute_name):
 			cmds.setAttr(node_sep_name, keyable=True, lock=True)
 
 
-def lock_unlock_attribute():
+def modify_attribute(**kwargs):
 	sel_list  = check_for_selection()
 	chan_list = check_cbox_attributes()[1]
-	for obj in sel_list:	    
-		if not channel_list:
-			chan_list = cmds.listAttr(object, keyable=True, unlocked=True)
+	global last_modified
+	for obj in sel_list:
+		if not chan_list:
+			chan_list = cmds.listAttr(obj, keyable=True, unlocked=True) # store keyable + unlocked attrs
+			
+			if chan_list:
+				last_modified = [] # store the last modified attrs
+				for chan in chan_list:
+					full_name = '{0}.{1}'.format(obj, chan)
+					if cmds.getAttr(full_name, **kwargs):
+						cmds.setAttr(full_name, keyable=True, lock=False, channelBox=False) # Default
+					else:
+						cmds.setAttr(full_name, **kwargs)
+					last_modified.append(chan)
 
-		for chan in chan_list:
-			node_attr_name = '{0}.{1}'.format(obj, attrs)
-			attr_status = cmds.getAttr(node_attr_name, lock=True)
-			if attr_status:
-				cmds.setAttr(node_attr_name, lock=False)
-			else:
-				cmds.setAttr(node_attr_name, lock=True)
+			if not chan_list:
+				for chan in last_modified:
+					full_name = '{0}.{1}'.format(obj, chan)
+					if cmds.getAttr(full_name, **kwargs):				
+						cmds.setAttr(full_name, keyable=True, lock=False, channelBox=False) # Default
+					else:
+						cmds.setAttr(full_name, **kwargs)
+
+		else: # modify or unmodify selected channels
+			for chan in chan_list:
+				full_name = '{0}.{1}'.format(obj, chan)
+				if cmds.getAttr(full_name, **kwargs):
+					cmds.setAttr(full_name, keyable=True, lock=False, channelBox=False) # Default
+				else:
+					cmds.setAttr(full_name, **kwargs)
+
+
+def mute_attribute(**kwargs):
+	sel_list  = check_for_selection()
+	chan_list = check_cbox_attributes()[1]
+	for obj in sel_list:
+		if not chan_list:
+			chan_list = cmds.listAttr(obj, keyable=True, unlocked=True)
+			if chan_list:
+				for chan in chan_list: 
+					full_name = '{0}.{1}'.format(obj, chan)
+					cmds.mute(full_name, **kwargs)
+
+		else: 
+			for chan in chan_list:
+				full_name = '{0}.{1}'.format(obj, chan)
+				cmds.mute(full_name, **kwargs)
 
 
 def connect_attribute():
@@ -169,7 +205,6 @@ def connect_attribute():
 	elif len(sel_list) == 1:
 		cmds.warning('Only one object selected. Select another')
 	else:
-		# reset_channels.channel_list
 		for obj in sel_list:
 			connect_attr_list = chan_list
 			if not chan_list:
@@ -178,7 +213,8 @@ def connect_attribute():
 		first_sel = sel_list[0]
 		for next_sel in sel_list[1:]:
 			for attr in connect_attr_list:
-				cmds.connectAttr('{0}.{1}'.format(first_sel, attr), '{0}.{1}'.format(next_sel, attr), force=True)
+				cmds.connectAttr('{0}.{1}'.format(first_sel, attr), 
+								 '{0}.{1}'.format(next_sel, attr), force=True)
 		
 		deselect_channels()
 
