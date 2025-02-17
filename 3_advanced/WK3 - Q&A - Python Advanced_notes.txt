@@ -1,0 +1,59 @@
+WK3 - Advanced Python 
+Q & A Notes:
+
+
+
+This is the longest and hardest module.
+
+
+
+When do we need configuration and data files?
+Configuration file:
+1. Separate files from the code base. User doesn't need to access code base. Step before creating the UI, the bridge before the UI. 
+2. The script is the same but the results are different for different teams based on their configuration files. It's not hard-coded into the base code. 
+3. The configuration file allows more flexibility without needing to rewrite the base code. Making one script more flexible and extended its use. 
+4. The configuration file acts as an entry way for different user/dept/studios. 
+There is a consideration that someone is 
+
+
+Data file:
+-Normally you don't modify the information in a data file. 
+-You don't care about the format. No one will be opening it. It's usually a data dump. 
+
+When should we use classes?
+-A node is a perfect example of a class. Everything uses a node. 
+-Nodes and node overrides
+-Class's self allows you to not need global and local variables. Everything is accessible inside itself (container)
+
+What is the purpose of generators?
+-Must know but don't need to use them. 
+-Generators don't store the data in memory (RAM).
+-Generators are faster. 
+-Generators are closer to computer language. 
+-If you need to calculate something a generator is a good way to go. Speed. 
+-Better performance and need for space. 
+
+
+Decorator
+-A guranteed before and after
+-You can do it manually but a decorator gurantees that it happens. 
+-It is more of a structural thing. Adds a touch of complexity. 
+
+Recommended to watch, TD Meetup 03. 
+-Alex used everything in Advanced Python in there, except generators. 
+https://www.alexanderrichtertd.com/post/visual-effects-pipelines-td-meetup
+https://www.youtube.com/watch?v=MtFYQx3Jq5E
+
+
+Python Co-pilot
+-Slowly start to integrate it into your workflow
+-Don't fully trust its answers but give it a try. 
+-Video of the TD Meetup on this topic is coming out at the end of the week. 
+-It could be a 25% productivity boost. 
+
+
+Mark goes to chatGPT when he's looking something up that he used to search on Google for. 
+-Stuff for Maya is good but he finds that stuff for Unreal ChatGPT just makes the stuff up. 
+
+
+*Learn the topics in this chapter that is important to you that you would encounter and use. 
