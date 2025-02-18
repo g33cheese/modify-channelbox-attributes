@@ -28,8 +28,6 @@ CUBE CLASS
 
 """
 
-import maya.cmds as cmds
-
 # Parent Class
 class Object:
    def __init__(self, name):
@@ -50,23 +48,23 @@ class Object:
       self.scale_value = [x, y, z]
       print('{0} scaled: {1}, {2}, {3}'.format(self.name, x, y, z))
 
+
 # Child Class
 class Cube(Object):
    def __init__(self, name):
       super().__init__(name)
       self.color_value = [1.0, 1.0, 1.0]
-      self.cube = cmds.polyCube(name=self.name)
 
    def color(self, R, G, B): 
       self.color_value = [R, G, B]
       print('{0} set RGB: {1}, {2}, {3}'.format(self.name, R, G, B))
 
    def print_status(self):
-      print('Transform Status for {0}:'.format(self.name))
-      print('{0}'.format(self.translate_value))
-      print('{0}'.format(self.rotate_value))
-      print('{0}'.format(self.scale_value))
-      print('{0}'.format(self.color_value))
+      print('#-------{0}-------#'.format(self.name))
+      print('Translation: {0}'.format(self.translate_value))
+      print('Rotation: {0}'.format(self.rotate_value))
+      print('Scale: {0}'.format(self.scale_value))
+      print('Color: {0}'.format(self.color_value))
 
    def update_transform(self, ttype, value):
       transforms = {'translation': self.translate, 
@@ -76,6 +74,7 @@ class Cube(Object):
       transforms[ttype](*value)
 
 
+# Create 3 cube objects
 cube1 = Cube('cube_001')
 cube2 = Cube('cube_002')
 cube3 = Cube('cube_003')
@@ -85,5 +84,18 @@ cube1.rotate(90, -45, 90)
 cube1.scale(2, 1.5, 1.85)
 cube1.color(255, 192, 203)
 cube1.print_status()
+cube1.update_transform('translation', [20, 30, 40])
 
-cube1.update_transform('rotation', [30, 180, -45])
+cube2.translate(5, 5, 5)
+cube2.rotate(30, 60, 120)
+cube2.scale(1.25, 1.25, 1.25)
+cube2.color(160, 32, 240)
+cube2.print_status()
+cube2.update_transform('rotation', [30, 180, -45])
+
+cube3.translate(10, 2.5, 7.5)
+cube3.rotate(-45, 180, -90)
+cube3.scale(3.5, 1.5, 1.05)
+cube3.color(50, 205, 50)
+cube3.print_status()
+cube2.update_transform('scale', [2.1, 2.1, 2.1])
