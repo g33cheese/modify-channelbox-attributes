@@ -1,10 +1,10 @@
-#*********************************************************************
+# *********************************************************************
 # content   = Cube Class assignment
 # version   = 0.1.0
 # date      = 2025-02-16
-# 
+#
 # author   = Garvey Chi - garveychi@gmail.com
-#*********************************************************************
+# *********************************************************************
 """
 CUBE CLASS
 
@@ -28,50 +28,52 @@ CUBE CLASS
 
 """
 
+
 # Parent Class
 class Object:
-   def __init__(self, name):
-      self.name = name
-      self.translate_value = [0.0, 0.0, 0.0]
-      self.rotate_value = [0.0, 0.0, 0.0]
-      self.scale_value = [1.0, 1.0, 1.0]
+    def __init__(self, name):
+        self.name = name
+        self.translate_value = [0.0, 0.0, 0.0]
+        self.rotate_value = [0.0, 0.0, 0.0]
+        self.scale_value = [1.0, 1.0, 1.0]
 
-   def translate(self, x, y, z):
-      self.translate_value = [x, y, z]
-      print('{0} translated: {1}, {2}. {3}'.format(self.name, x, y, z))
+    def translate(self, x, y, z):
+        self.translate_value = [x, y, z]
+        print('{0} translated: {1}, {2}. {3}'.format(self.name, x, y, z))
 
-   def rotate(self, x, y, z):
-      self.rotate_value = [x, y, z]
-      print('{0} rotated: {1}, {2}, {3}'.format(self.name, x, y, z))
+    def rotate(self, x, y, z):
+        self.rotate_value = [x, y, z]
+        print('{0} rotated: {1}, {2}, {3}'.format(self.name, x, y, z))
 
-   def scale(self, x, y, z):
-      self.scale_value = [x, y, z]
-      print('{0} scaled: {1}, {2}, {3}'.format(self.name, x, y, z))
+    def scale(self, x, y, z):
+        self.scale_value = [x, y, z]
+        print('{0} scaled: {1}, {2}, {3}'.format(self.name, x, y, z))
 
 
 # Child Class
 class Cube(Object):
-   def __init__(self, name):
-      super().__init__(name)
-      self.color_value = [1.0, 1.0, 1.0]
+    def __init__(self, name):
+        super().__init__(name)
+        self.color_value = [1.0, 1.0, 1.0]
 
-   def color(self, R, G, B): 
-      self.color_value = [R, G, B]
-      print('{0} set RGB: {1}, {2}, {3}'.format(self.name, R, G, B))
+    def color(self, R, G, B):
+        self.color_value = [R, G, B]
+        print('{0} set RGB: {1}, {2}, {3}'.format(self.name, R, G, B))
 
-   def print_status(self):
-      print('#-------{0}-------#'.format(self.name))
-      print('Translation: {0}'.format(self.translate_value))
-      print('Rotation: {0}'.format(self.rotate_value))
-      print('Scale: {0}'.format(self.scale_value))
-      print('Color: {0}'.format(self.color_value))
+    def print_status(self):
+        print('#-------{0}-------#'.format(self.name))
+        print('Translation: {0}'.format(self.translate_value))
+        print('Rotation: {0}'.format(self.rotate_value))
+        print('Scale: {0}'.format(self.scale_value))
+        print('Color: {0}'.format(self.color_value))
 
-   def update_transform(self, ttype, value):
-      transforms = {'translation': self.translate, 
-                       'rotation': self.rotate,
-                          'scale': self.scale,
-                    }
-      transforms[ttype](*value)
+    def update_transform(self, ttype, value):
+        transforms = {'translation': self.translate,
+                      'rotation': self.rotate,
+                      'scale': self.scale,
+                      }
+
+        transforms[ttype](*value)
 
 
 # Create 3 cube objects

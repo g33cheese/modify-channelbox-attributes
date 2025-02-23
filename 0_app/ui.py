@@ -1,107 +1,153 @@
-#*********************************************************************
-# content	= launches ui for modify channelbox attribute tool
-# version	= 0.1.0
-# date		= 2025-01-25
-# 
-# how to 	= draw_ui()
-# to dos 	= channel attribute buttons' functionality. 
-# 			  add reorder attribute buttons.
-# 
-# author	= Garvey Chi (garveychi@gmail.com)
-#*********************************************************************
+# *********************************************************************
+# content   = launches ui for modify channelbox attribute tool
+# version   = 0.1.0
+# date      = 2025-01-25
+#
+# how to    = draw_ui()
+# to dos    = add reorder attribute buttons.
+#
+# author    = Garvey Chi (garveychi@gmail.com)
+# *********************************************************************
 '''Creates the UI for launching channelbox tools.'''
 
-from maya import mel
-from maya import cmds
-from functools import partial
+import maya.cmds as cmds
 
 import modify_channel_attrs as mod
+import export_attr as exp
 
 from imp import reload
 reload(mod)
+reload(exp)
+
+class BaseUi:
+    '''
+    A Class would improve this module because it would provide:
+    1) Class parenting - allowed the Ui class (however minimal) to be extended.
+       The BaseUi class was the template for window creation and the Ui Class
+       contained the ui's button creation.
+    2) Class inheritance - BaseUi's methods and class variables were inherited
+       by the child class. Specifically the create_separator method inherited
+       values set in the BaseUi, any updates to the sep_height variable value
+       would appear in all button objects.
+    3) Gurantees - because all class items were in the objects, variables and
+       functions were easier to call than if the module wasn't using classes.
+    '''
+
+    def __init__(self, name, title):
+        self.name = name
+        self.title = title
+        self.sep_height = 20
+        self.sep_style = 'none'
+
+        self.create_window(name, title)
+        self.create_separator(self.sep_height, self.sep_style)
+
+        cmds.rowLayout(numberOfColumns=2)
+
+    def create_window(self, name, title):
+        if cmds.window(name, exists=True):
+            cmds.deleteUI(name, window=True)
+        self.window = cmds.window(name, title=title, sizeable=False,
+                                  resizeToFitChildren=True)
+        self.layout = cmds.rowColumnLayout(numberOfColumns=1,
+                                           columnWidth=(1, 300))
+
+    def create_separator(self, height_value, style_type):
+        cmds.separator(height=height_value, style=style_type)
+
+    def create_button(self, label_name, command, start=None, section=None):
+        if start:
+            self.create_separator(self.sep_height, 'singleDash')
+            cmds.text(label=section, align='center')
+            self.create_separator(self.sep_height, 'singleDash')
+        cmds.button(label=label_name, command=command)
 
 
-def draw_ui():
-	#*********************************************************************
-	# UI
-	window_name = 'channelboxToolWindow'
+class Ui(BaseUi):
+    def __init__(self, name, title):
+        super().__init__(name, title)
+        cmds.setParent(self.layout)
 
-	if cmds.window(window_name, exists=True):
-		cmds.deleteUI(window_name, window=True)
+        # *********************************************************************
+        # Buttons
+        self.create_button('Reset Channels',
+                           lambda *args: mod.reset_channels(),
+                           True, '-- RESET ATTRIBUTES --')
+        self.create_button('Match Transforms',
+                           lambda *args: mod.match_attribute('all'),
+                           True, '-- MATCH ATTRIBUTES --')
+        self.create_button('Match Translate',
+                           lambda *args: mod.match_attribute('translate'))
+        self.create_button('Match Rotate',
+                           lambda *args: mod.match_attribute('rotate'))
+        self.create_button('Match Scale',
+                           lambda *args: mod.match_attribute('scale'))
 
-	cmds.window(window_name, title='ChannelBox Tools', sizeable=False, resizeToFitChildren=True)
-	cmds.rowColumnLayout(numberOfColumns=1, columnWidth=(1, 300))
-	cmds.separator(height=20, style='none')
+        self.attribute_name = cmds.textFieldGrp(label='Attribute Name:',
+                                                columnAlign=[1, 'left'],
+                                                text='new_attr')
+        self.attribute_type = cmds.optionMenuGrp(label='Attribute Type:',
+                                                 columnAlign=[1, 'left'])
+        self.enum_attr_name = cmds.textFieldGrp(label='Enum Names:',
+                                                columnAlign=[1, 'left'],
+                                                text='value1:value2:value3')
+        self.min_max_attrs = cmds.floatFieldGrp(label='Min/Max:',
+                                                numberOfFields=2,
+                                                columnAlign=[1, 'left'])
 
-	#*********************************************************************
-	# Reset Attributes
-	cmds.text(label='Reset Attributes', align='left')
-	cmds.separator(height=20, style='singleDash')
-	cmds.button(label='Reset Channels', command=lambda *args: mod.reset_channels())
-	cmds.separator(height=20, style='singleDash')
+        for attr_type in ['bool', 'int', 'float', 'enum']:
+            self.create_menu_item(attr_type)
 
+        self.create_button('Add Attribute',
+                           lambda *args: mod.add_attribute(
+                               self.attribute_name,
+                               self.min_max_attrs,
+                               self.enum_attr_name,
+                               self.attribute_type),
+                           True, '-- ADD/DEL ATTRIBUTES --')
+        self.create_button('Add Separator',
+                           lambda *args: mod.add_separator(
+                               self.attribute_name))
+        self.create_button('Delete Attribute',
+                           lambda *args: mod.delete_attribute())
+        self.create_button('Lock/Unlock Attribute',
+                           lambda *args: mod.modify_attribute(
+                               keyable=True, lock=True, channelBox=False),
+                           True, '-- CHANNEL ATTRIBUTES --')
+        self.create_button('Hide Attribute',
+                           lambda *args: mod.modify_attribute(
+                               keyable=False, lock=False, channelBox=False))
+        self.create_button('Lock + Hide Attribute',
+                           lambda *args: mod.modify_attribute(
+                               keyable=False, lock=True, channelBox=False))
+        self.create_button('Keyable/Unkeyable Attribute',
+                           lambda *args: mod.modify_attribute(
+                               keyable=False, lock=False, channelBox=True))
+        self.create_button('Mute Attribute',
+                           lambda *args: mod.mute_attribute())
+        self.create_button('Unmute Attribute',
+                           lambda *args: mod.mute_attribute(
+                               disable=True, force=True))
+        self.create_button('^', lambda *args: mod.reorder_attribute())
+        self.create_button('v', lambda *args: mod.reorder_attribute())
 
-	#*********************************************************************
-	# Match Attributes
-	cmds.text(label='Match Attributes', align='left')
-	cmds.separator(height=20, style='singleDash')
-	cmds.button(label='Match Transforms', command=lambda *args: mod.match_attribute('all'))
-	cmds.button(label='Match Translate', command=lambda *args: mod.match_attribute('translate'))
-	cmds.button(label='Match Rotate', command=lambda *args: mod.match_attribute('rotate'))
-	cmds.button(label='Match Scale', command=lambda *args: mod.match_attribute('scale'))
-	cmds.separator(height=20, style='singleDash')
+        self.create_button('Connect Attributes',
+                           lambda *args: mod.connect_attribute(),
+                           True, '-- CONNECT ATTRIBUTES --')
+        self.create_button('Disconnect Attributes',
+                           lambda *args: mod.disconnect_attribute())
 
+        # Utilizing data files here (writing data to a json)
+        self.create_button('Export Attribute', lambda *args: mod.export_attribute(),
+                           True, '-- EXPORT ATTRIBUTES --')
 
-	#*********************************************************************
-	# Add Attributes
-	cmds.text(label='Add Attributes', align='left')
-	cmds.separator(height=20, style='singleDash')
-	attribute_name = cmds.textFieldGrp(label='Attribute Name:', columnAlign=[1, 'left'])
-	cmds.optionMenu(label='Attribute Type:', )
-	cmds.menuItem(label='int')
-	cmds.menuItem(label='float')
-	cmds.menuItem(label='bool')
-	cmds.menuItem(label='enum')
-	min_max_attrs = cmds.floatFieldGrp(label='Min/Max:', numberOfFields=2)
-	cmds.button(label='Add Attribute', command=lambda *args: mod.add_attribute(attribute_name))
-	cmds.button(label='Add Separator', command=lambda *args: mod.add_separator(attribute_name))
-	cmds.separator(height=20, style='singleDash')
+        # *********************************************************************
+        # Formatting
+        self.create_separator(40, self.sep_style)
+        cmds.showWindow(self.window)
 
-
-	#*********************************************************************
-	# Channel Attributes
-	cmds.text(label='Channel Attributes', align='left')
-	cmds.separator(height=20, style='singleDash')
-	cmds.button(label='Lock/Unlock Attribute', command=lambda *args: mod.modify_attribute(
-				keyable=True, lock=True, channelBox=False))
-	cmds.button(label='Hide Attribute', command=lambda *args: mod.modify_attribute(
-				keyable=False, lock=False, channelBox=False))
-	cmds.button(label='Lock + Hide Attribute', command=lambda *args: mod.modify_attribute(
-				keyable=False, lock=True, channelBox=False))
-	cmds.button(label='Keyable/Unkeyable Attribute', command=lambda *args: mod.modify_attribute(
-				keyable=False, lock=False, channelBox=True))
-	cmds.button(label='Mute Attribute', command=lambda *args: mod.mute_attribute())
-	cmds.button(label='Unmute Attribute', command=lambda *args: mod.mute_attribute(
-				disable=True, force=True))
-	cmds.button(label='^')
-	cmds.button(label='v')
-	cmds.separator(height=20, style='singleDash')
-
-
-	#*********************************************************************
-	# Connect Attributes
-	cmds.text(label='Connect Attributes', align='left')
-	cmds.separator(height=20, style='singleDash')
-	cmds.button(label='Connect Attributes', command=lambda *args: mod.connect_attribute())
-	cmds.button(label='Disconnect Attributes', command=lambda *args: mod.disconnect_attribute())
-	cmds.separator(height=20, style='singleDash')
-
-
-	#*********************************************************************
-	# Formatting
-
-	cmds.separator(height=30, style='none')
-	cmds.showWindow()
+    def create_menu_item(self, attr_type):
+        cmds.menuItem(label=attr_type)
 
 
-draw_ui()
+ui_1 = Ui('channelboxToolWindow', 'ChannelBox Tools')

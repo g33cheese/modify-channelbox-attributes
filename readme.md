@@ -1,12 +1,8 @@
 ## **Introduction**
-The **Modify Channelbox Attributes** app provides the user with a collection of simple tools that help to speed up the artist's workflow. 
+The **Modify Channelbox Attributes** app provides the user with a collection of simple tools that help to speed up a rigger's workflow. 
 These tools provide the ability to set, add, connect or change the state of an object's channelbox attributes. 
 
 ![tool ui](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/modify_cb_attrs_tool.png)
-
-## Environment
-- [x] **OS**: Windows | Linux
-- [x] **Software**: Maya 2023+
 
 ## Tool Actions
 ### **Reset Attributes** 
@@ -29,12 +25,28 @@ These tools provide the ability to set, add, connect or change the state of an o
 ![add_attributes](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/tool_add_attributes.gif)
 
 ### **Channel Attributes**
-* _Lock/Unlock Attribute_
-* _Mute/Unmute Attribute_
+* _Lock/Unlock Attribute_ - Works similar to the _Reset Channels_ tool. For selected object(s), lock all attributes. If attributes are already locked the opposite unlock action will be done. If specific attributes are highlighted only those attributes locked/unlocked. 
+
+![lock_unlock_attributes](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/lock_unlock_attributes.gif)
+
 * _Hide Attribute_
-* _Unhide Last Hidden Attribute_
-* _Lock + Hide Attribute_
-* _Keyable/Unkeyable Attribute_
+
+* _Lock + Hide Attribute_ - For selected object(s), lock and hide all attributes. Toggles unlocked and unhidden if action initialized again. If specific attributes are highlighted only those attributes affected. 
+
+**Note**, a current bug exists where re-initializing action on specified attributes does not unlock and unhide the attributes as seen in the example gif: 
+
+![lock_hide_attributes](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/lock_hide_attributes.gif)
+
+* _Keyable/Unkeyable Attribute_ - For selected object(s), makes all attributes keyable. Toggles attributes unkeyable if action initialized again. If specific attributes are highlighted only those attributes affected. 
+
+![keyable_unkeyable_attribute](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/keyable_unkeyable_attributes.gif)
+
+* _Mute/Unmute Attribute_ - For selected object(s), mutes keyed attributes. **Note** that animation needs to be present on attributes for action to be applied. Toggles attributes unmute if action initialized again. If specific attributes are highlighted only those attributes affected. 
+
+**Note** The _Mute_ and _Unmute_ tool have been split into separate buttons in order to get it to work.
+
+![mute_unmute_attributes](https://github.com/g33cheese/modify-channelbox-attributes/blob/main/img/mute_unmute_attributes.gif)
+
 * ^ _(Reorder Attribute - Up)_
 * v _(Reorder Attribute - Down)_
 
