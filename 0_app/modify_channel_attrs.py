@@ -135,11 +135,13 @@ class ChannelBoxTools(object):
 
     def add_attribute(self, attribute_name, min_max, en_attr_name,
                       attribute_type=None):
-        self.attr_name = cmds.textFieldGrp(attribute_name, query=True, text=True)
+        self.attr_name = cmds.textFieldGrp(
+            attribute_name, query=True, text=True)
         self.enum_name = cmds.textFieldGrp(en_attr_name, query=True, text=True)
         self.min_value = cmds.floatFieldGrp(min_max, query=True, value1=True)
         self.max_value = cmds.floatFieldGrp(min_max, query=True, value2=True)
-        self.attr_type = cmds.optionMenuGrp(attribute_type, query=True, value=True)
+        self.attr_type = cmds.optionMenuGrp(
+            attribute_type, query=True, value=True)
 
         for obj in self.sel_list:
             full_name = '{0}.{1}'.format(obj, self.attr_name)
@@ -207,7 +209,6 @@ class ChannelBoxTools(object):
                         cmds.deleteAttr(self.complete_name)
                     else:
                         break
-
 
     def modify_attribute(self, **kwargs):
         for obj in self.sel_list:
@@ -304,7 +305,8 @@ class ChannelBoxTools(object):
 
         for sel in self.sel_list:
             if not self.channel_list:
-                self.channel_list = cmds.listAttr(sel, keyable=True, unlocked=True)
+                self.channel_list = cmds.listAttr(sel, keyable=True,
+                                                  unlocked=True)
             for attr in self.channel_list:
                 attr_value = cmds.getAttr(self.complete_name)
                 self.obj_values[self.complete_name] = attr_value

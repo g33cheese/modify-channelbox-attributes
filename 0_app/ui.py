@@ -13,11 +13,9 @@
 import maya.cmds as cmds
 
 import modify_channel_attrs as mod
-import export_attr as exp
 
 from imp import reload
 reload(mod)
-reload(exp)
 
 class BaseUi:
     '''
