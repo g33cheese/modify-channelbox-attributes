@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="save">
+    <file>btn_camera.png</file>
+    <file>btn_folder.png</file>
+    <file>btn_help.png</file>
+    <file>btn_project.png</file>
+    <file>btn_render.png</file>
+    <file>btn_report.png</file>
+    <file>btn_write.png</file>
+    <file>default.png</file>
+    <file>shelf_viewport.png</file>
+  </qresource>
+</RCC>
