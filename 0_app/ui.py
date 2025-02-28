@@ -10,27 +10,16 @@
 # *********************************************************************
 '''Creates the UI for launching channelbox tools.'''
 
+import importlib
+
 import maya.cmds as cmds
 
 import modify_channel_attrs as mod
 
-from imp import reload
-reload(mod)
+importlib.reload(mod)
 
-class BaseUi:
-    '''
-    A Class would improve this module because it would provide:
-    1) Class parenting - allowed the Ui class (however minimal) to be extended.
-       The BaseUi class was the template for window creation and the Ui Class
-       contained the ui's button creation.
-    2) Class inheritance - BaseUi's methods and class variables were inherited
-       by the child class. Specifically the create_separator method inherited
-       values set in the BaseUi, any updates to the sep_height variable value
-       would appear in all button objects.
-    3) Gurantees - because all class items were in the objects, variables and
-       functions were easier to call than if the module wasn't using classes.
-    '''
 
+class BaseUi(ChannelBoxTools):
     def __init__(self, name, title):
         self.name = name
         self.title = title
