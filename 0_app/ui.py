@@ -19,44 +19,24 @@ import modify_channel_attrs as mod
 importlib.reload(mod)
 
 
-class BaseUi(ChannelBoxTools):
+class Ui:
     def __init__(self, name, title):
         self.name = name
         self.title = title
         self.sep_height = 20
         self.sep_style = 'none'
 
+        # *********************************************************************
+        # LAYOUT
         self.create_window(name, title)
         self.create_separator(self.sep_height, self.sep_style)
 
         cmds.rowLayout(numberOfColumns=2)
 
-    def create_window(self, name, title):
-        if cmds.window(name, exists=True):
-            cmds.deleteUI(name, window=True)
-        self.window = cmds.window(name, title=title, sizeable=False,
-                                  resizeToFitChildren=True)
-        self.layout = cmds.rowColumnLayout(numberOfColumns=1,
-                                           columnWidth=(1, 300))
-
-    def create_separator(self, height_value, style_type):
-        cmds.separator(height=height_value, style=style_type)
-
-    def create_button(self, label_name, command, start=None, section=None):
-        if start:
-            self.create_separator(self.sep_height, 'singleDash')
-            cmds.text(label=section, align='center')
-            self.create_separator(self.sep_height, 'singleDash')
-        cmds.button(label=label_name, command=command)
-
-
-class Ui(BaseUi):
-    def __init__(self, name, title):
-        super().__init__(name, title)
         cmds.setParent(self.layout)
 
         # *********************************************************************
-        # Buttons
+        # BUTTONS
         self.create_button('Reset Channels',
                            lambda *args: mod.reset_channels(),
                            True, '-- RESET ATTRIBUTES --')
@@ -124,14 +104,28 @@ class Ui(BaseUi):
         self.create_button('Disconnect Attributes',
                            lambda *args: mod.disconnect_attribute())
 
-        # Utilizing data files here (writing data to a json)
-        self.create_button('Export Attribute', lambda *args: mod.export_attribute(),
-                           True, '-- EXPORT ATTRIBUTES --')
-
         # *********************************************************************
-        # Formatting
+        # FORMATTING
         self.create_separator(40, self.sep_style)
         cmds.showWindow(self.window)
+
+        # *********************************************************************
+        # FUNC
+    def create_window(self, name, title):
+        if cmds.window(name, exists=True):
+            cmds.deleteUI(name, window=True)
+        self.window = cmds.window(name, title=title, sizeable=False, resizeToFitChildren=True)
+        self.layout = cmds.rowColumnLayout(numberOfColumns=1, columnWidth=(1, 300))
+
+    def create_separator(self, height_value, style_type):
+        cmds.separator(height=height_value, style=style_type)
+
+    def create_button(self, label_name, command, start=None, section=None):
+        if start:
+            self.create_separator(self.sep_height, 'singleDash')
+            cmds.text(label=section, align='center')
+            self.create_separator(self.sep_height, 'singleDash')
+        cmds.button(label=label_name, command=command)
 
     def create_menu_item(self, attr_type):
         cmds.menuItem(label=attr_type)
