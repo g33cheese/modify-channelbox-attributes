@@ -1,0 +1,31 @@
+Advanced Python - APP PRESENTATION
+ 
+
+1. What's the purpose?
+2. Who's the audience?
+
+
+Modify ChannelBox Attributes App
+
+A. The App's purpose is to speed up a rigger's workflow. The App's tools reduce the number of actions (button clicks) the rigger needs to take when inputting channelbox data. We do so by removing the need for the artist to go into the channelBox's menus (Channels and Edit) or in the case of the Reset Channels action, removing the need to input data. 
+
+A rigger's workflow when creating and manipulating rigging objects is to:
+click to enter menu > scroll to look for the action > click to select action. 
+or
+RMB-click on ChannelBox > scroll to desired action > click to select action.
+Each avenue is a 3 part action. 
+
+This isn't efficient as the ChannelBox menus actions aren't intuitively laid out, and there are no visual references (icons or colours) to aid the user for quick recognition and selection. Riggers often click on the wrong ChannelBox menu, the Channels menu instead of Edit menu and vice versa. RMB-clicking on the ChannelBox provides the Channels menu but no actions from the Edit menu, further adding to the rigger's misdirection. All  of this adds extra time to the rigger's workflow when modifying their object's channelBox. 
+
+Adding attributes is an example of further inefficiency with Maya's current ChannelBox workflow design. As currently designed, a rigger selects the Add Attribute action from the Edit menu (not the Channels menu), this launches a separate window with a lot of options to make a choice from. All of the most used options have been added to the APP UI. Other lesser used options are still included as actions in different sections of the UI as riggers would still utilize them in their workflow apart from when they are creating new attributes.  
+
+To demonstrate some of the APPs time-saving let us elaborate on the previously mentioned Reset Channels action. Here we have removed the need for the user to input the 0 value in the translate and rotate attributes, and a value of 1 for the scale and visibility attributes. Resetting values to default is an action taken innumerable times by a rigger when testing a rig. Posing a character and then needing to set it back to default. Zeroing out a control's transform values takes approximately 3-5 seconds (3 for the translate and rotates, 5 seconds once scales are include, and even more time can be added if there are custom attributes involved). Utilizing the Reset Attributes action, the object's attributes are reset to default in 0.5 seconds. A 5 second action has now been reduced by a factor of 10. 
+
+Why are these helpful functions collected and presented as an APP rather than deployed individually as individual commands accessible via Maya's shelf?
+The shelf is limited to a linear horizontal layout where as the UI's design offers much greater readability and intuitive layout as it emulates an iPad's horizontal layout. 
+
+The APP takes these frequently used actions out of submenus and presents them front-facing to the Rigger to accurately represent how often they are accessed. The APP does this by pulling these actions out of the ChannelBox's menus with clearly represented icons that are designed for quick recognition and selection by the rigger. 
+
+
+
+B. This APP is for Riggers

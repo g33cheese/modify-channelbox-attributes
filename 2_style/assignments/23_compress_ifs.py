@@ -5,9 +5,8 @@
 # email   = contact@alexanderrichtertd.com
 #**********************************************************************************
 
+def set_color(control_list, color_index):
 
-def set_color(control_list=None, color_index_no=None):
-    
     colors = {'magenta' : 4, 
               'blue'    : 6, 
               'red'     : 13, 

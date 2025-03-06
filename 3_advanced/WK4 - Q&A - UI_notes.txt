@@ -1,0 +1,59 @@
+Week 4 - UI 
+Q & A
+
+-Using qt.py
+-Re-watching the videos multiple times
+-Reading through
+-Everything is a widget
+
+• Why is PySide the most important UI library?
+-It is free and is available in all DCCs
+> Why use Qt.py?
+- Downside is that it is not implemented in the software and you need to download and install it. Also, it cannot have the functions of all elements (pySide, pySide2, PyQt, PyQt5, etc), it is a middle ground. There are a small amount of things that you don't have and need to write yourself. 
+• What are the benefits and drawbacks of QtDesigner UI?
+Positive: 
+-Realtime feedback and intuitive when building the UI
+-You have the .ui file that helps you identify the names of every object/widget
+Downside: 
+1. You can't do procedural UIs with this. 
+2. Not all functionality is not there in the QtDesigner that you need to do via code
+3. There are small differences in the UIs between softwares.
+• How does UI design benefit your application?
+-Artists will want to use it. 
+-Intuitive, Familiar, Communication
+-Familiar to something you know (Photoshop, Phone-design, Z-pattern)
+
+**Try to avoid abstract phrases when describing things.
+
+Q: Reloading a class>
+Alex - Why would you want to reload a class?
+If it's in another module just import the module of the class.
+Garvey - I'm making edits to the class and the changes are only updated if I kill the DCC and relaunch it. 
+Does importing the Class 'reload'/import updates made to it?
+
+Q: Is it possible to add an icon to a line edit? Or maybe just place a button next to it Or Icon instead of a button?
+
+Q: What is the best thing to use for a resizable section of a the layout? 
+
+
+PRESENTATION TIME - Last Q&A (March 15th)
+Up to 15 mins to present
+1. What's the purpose?
+2. Who's the audience?
+3. Most importantly, what is the thing that you want to achieve for your career? How is that fitting in with your plan for your career. 
+
+Record a video
+Final Assignment is due for upload Sunday March 16th
+-The UI and the final wrap-up
+
+*Recommend to watch the second video of the TD Meetup 02 (Presentation Skills for Nerds)
+**Make a video to display your tool.
+***GitHub is for getting a job. 
+
+
+Python Copilot
+-has GPT, has Gemini
+-just $95 right now
+
+
+Google draggable/resizable widget. Border draggable. You can try Copilot to see if it points you in the right direction. 

@@ -33,8 +33,9 @@ def check_for_selection():
 def check_cbox_attributes():
     ''' Store the selected channels in a list. '''
     get_cbox_name = mel.eval('$temp = $gChannelBoxName')
-    channel_list = cmds.channelBox(
-        get_cbox_name, query=True, selectedMainAttributes=True)
+    channel_list = cmds.channelBox(get_cbox_name,
+                                   query=True,
+                                   selectedMainAttributes=True)
 
     return get_cbox_name, channel_list
 
@@ -42,12 +43,15 @@ def check_cbox_attributes():
 def get_selected_channels():
     ''' Returns channels that are selected in the channelbox. '''
     cbox_attr = check_cbox_attributes()[0]
-    sel_main_attrs = cmds.channelBox(
-        cbox_attr, query=True, selectedMainAttributes=True)
-    sel_shape_attrs = cmds.channelBox(
-        cbox_attr, query=True, selectedShapeAttributes=True)
-    sel_hist_attrs = cmds.channelBox(
-        cbox_attr, query=True, selectedHistoryAttributes=True)
+    sel_main_attrs = cmds.channelBox(cbox_attr,
+                                     query=True,
+                                     selectedMainAttributes=True)
+    sel_shape_attrs = cmds.channelBox(cbox_attr,
+                                      query=True,
+                                      selectedShapeAttributes=True)
+    sel_hist_attrs = cmds.channelBox(cbox_attr,
+                                     query=True,
+                                     selectedHistoryAttributes=True)
 
     sel_ch_list = []
     if sel_main_attrs:
@@ -81,9 +85,8 @@ def reset_channels():
             chan_list = cmds.listAttr(obj, keyable=True, unlocked=True)
 
         for channel in chan_list:
-            default_attribute = cmds.attributeQuery(channel,
-                                                    listDefault=True,
-                                                    node=obj)[0]
+            default_attribute = cmds.attributeQuery(
+                channel, listDefault=True, node=obj)[0]
             cmds.setAttr('{0}.{1}'.format(obj, channel), default_attribute)
 
     deselect_channels()
@@ -91,71 +94,76 @@ def reset_channels():
 
 def match_attribute(attribute):
     sel_list = check_for_selection()
-    tgt_node = sel_list[0]
+    tgt_node = None
     if sel_list:
-        pos = cmds.xform(tgt_node, worldSpace=True,
-                         translation=True, query=True)
+        tgt_node = sel_list[0]
+        pos = cmds.xform(tgt_node, worldSpace=True, translation=True, query=True)
         rot = cmds.xform(tgt_node, worldSpace=True, rotation=True, query=True)
         sca = cmds.xform(tgt_node, worldSpace=True, scale=True, query=True)
-    elif len(sel_list) == 1:
+    if len(sel_list) == 1:
         cmds.warning('Only one object selected. Select another')
-    else:
+    elif not sel_list:
         cmds.warning('Nothing is selected.')
-
     for match_node in sel_list[1:]:
         if attribute == 'translate':
-            cmds.xform(match_node, worldSpace=True,
+            cmds.xform(match_node,
+                       worldSpace=True,
                        translation=(pos[0], pos[1], pos[2]))
         elif attribute == 'rotate':
-            cmds.xform(match_node, worldSpace=True,
+            cmds.xform(match_node,
+                       worldSpace=True,
                        rotation=(rot[0], rot[1], rot[2]))
         elif attribute == 'scale':
-            cmds.xform(match_node, worldSpace=True,
+            cmds.xform(match_node,
+                       worldSpace=True,
                        scale=(sca[0], sca[1], sca[2]))
         elif attribute == 'all':
-            cmds.xform(match_node, worldSpace=True,
+            cmds.xform(match_node,
+                       worldSpace=True,
                        translation=(pos[0], pos[1], pos[2]),
                        rotation=(rot[0], rot[1], rot[2]),
                        scale=(sca[0], sca[1], sca[2]))
+        cmds.select(tgt_node, deselect=True)
 
-    cmds.select(tgt_node, deselect=True)
 
-
-def add_attribute(attribute_name, min_max, enum_attr_name, attribute_type=None):
+def add_attribute(attr_name, min_value, max_value, enum_name, attr_type=None):
     sel_list = check_for_selection()
-    attr_name = cmds.textFieldGrp(attribute_name, query=True, text=True)
-    enum_name = cmds.textFieldGrp(enum_attr_name, query=True, text=True)
-    min_value = cmds.floatFieldGrp(min_max, query=True, value1=True)
-    max_value = cmds.floatFieldGrp(min_max, query=True, value2=True)
-    attr_type = cmds.optionMenuGrp(attribute_type, query=True, value=True)
 
     for obj in sel_list:
         full_name = '{0}.{1}'.format(obj, attr_name)
         if cmds.objExists(full_name):
             cmds.warning('{0} already exists.'.format(full_name))
         elif attr_type == 'int':
-            cmds.addAttr(obj, longName=attr_name,
-                         attributeType='long', min=min_value, max=max_value)
+            cmds.addAttr(obj,
+                         longName=attr_name,
+                         attributeType='long',
+                         min=min_value,
+                         max=max_value)
         elif attr_type == 'enum':
-            cmds.addAttr(obj, longName=attr_name,
-                         attributeType='enum', enumName=enum_name)
+            cmds.addAttr(obj,
+                         longName=attr_name,
+                         attributeType='enum',
+                         enumName=enum_name)
         else:
-            cmds.addAttr(obj, longName=attr_name,
-                         attributeType=attr_type, min=min_value, max=max_value)
+            cmds.addAttr(obj,
+                         longName=attr_name,
+                         attributeType=attr_type,
+                         min=min_value,
+                         max=max_value)
         cmds.setAttr(full_name, keyable=True)
 
 
-def add_separator(attribute_name):
+def add_separator(attr_name):
     ''' Add a channelbox separator to selected object. '''
     sel_list = check_for_selection()
-    attribute_name = cmds.textFieldGrp(attribute_name, query=True, text=True)
-    separator_name = '{0}'.format(attribute_name.upper())
+    # attr_name = cmds.textFieldGrp(attr_name, query=True, text=True)
+    separator_name = '{0}'.format(attr_name.upper())
     sep_def_name = '___'
     sep_enum_name = '---------------:'
 
     for obj in sel_list:
         full_name = '{0}.{1}'.format(obj, separator_name)
-        if attribute_name and not cmds.objExists(full_name):
+        if attr_name and not cmds.objExists(full_name):
             cmds.addAttr(obj,
                          longName=separator_name,
                          niceName='---{0}---'.format(separator_name),
@@ -163,7 +171,7 @@ def add_separator(attribute_name):
                          enumName=sep_enum_name)
             cmds.setAttr('{0}.{1}'.format(obj, separator_name),
                          keyable=True, lock=True)
-        elif attribute_name and cmds.objExists(full_name):
+        elif attr_name and cmds.objExists(full_name):
             custom_attrs = cmds.listAttr(obj, keyable=True, userDefined=True)
             sep_attr_name = '{0}{1}'.format('_', custom_attrs[-1])
             cmds.addAttr(obj,
@@ -173,18 +181,23 @@ def add_separator(attribute_name):
                          enumName=sep_enum_name)
             cmds.setAttr('{0}.{1}'.format(obj, sep_attr_name),
                          keyable=True, lock=True)
-        elif not attribute_name:  # generic separator attribute:
+        elif not attr_name:  # generic separator attribute:
             try:
-                cmds.addAttr(obj, longName=sep_def_name,
-                             attributeType='enum', enumName=sep_enum_name)
+                cmds.addAttr(obj,
+                             longName=sep_def_name,
+                             attributeType='enum',
+                             enumName=sep_enum_name)
                 cmds.setAttr('{0}.{1}'.format(obj, sep_def_name),
                              keyable=True, lock=True)
             except Exception:
-                custom_attrs = cmds.listAttr(
-                    obj, keyable=True, userDefined=True)
+                custom_attrs = cmds.listAttr(obj,
+                                             keyable=True,
+                                             userDefined=True)
                 ext_sep_name = '{0}{1}'.format(custom_attrs[-1], '_')
-                cmds.addAttr(obj, longName=ext_sep_name,
-                             attributeType='enum', enumName=sep_enum_name)
+                cmds.addAttr(obj,
+                             longName=ext_sep_name,
+                             attributeType='enum',
+                             enumName=sep_enum_name)
                 cmds.setAttr('{0}.{1}'.format(obj, ext_sep_name),
                              keyable=True, lock=True)
 
@@ -212,8 +225,10 @@ def modify_attribute(**kwargs):
             for chan in chan_list:
                 full_name = '{0}.{1}'.format(obj, chan)
                 if cmds.getAttr(full_name, **kwargs):
-                    cmds.setAttr(full_name, keyable=True,
-                                 lock=False, channelBox=False)  # Default
+                    cmds.setAttr(full_name,
+                                 keyable=True,
+                                 lock=False,
+                                 channelBox=False)  # Default
                 else:
                     cmds.setAttr(full_name, **kwargs)
         if not chan_list:
@@ -224,8 +239,10 @@ def modify_attribute(**kwargs):
                 for chan in chan_list:
                     full_name = '{0}.{1}'.format(obj, chan)
                     if cmds.getAttr(full_name, **kwargs):
-                        cmds.setAttr(full_name, keyable=True,
-                                     lock=False, channelBox=False)  # Default
+                        cmds.setAttr(full_name,
+                                     keyable=True,
+                                     lock=False,
+                                     channelBox=False)  # Default
                     else:
                         cmds.setAttr(full_name, **kwargs)
                     last_modified.append(chan)
@@ -233,8 +250,10 @@ def modify_attribute(**kwargs):
                 for chan in last_modified:
                     full_name = '{0}.{1}'.format(obj, chan)
                     if cmds.getAttr(full_name, **kwargs):
-                        cmds.setAttr(full_name, keyable=True,
-                                     lock=False, channelBox=False)  # Default
+                        cmds.setAttr(full_name,
+                                     keyable=True,
+                                     lock=False,
+                                     channelBox=False)  # Default
                     else:
                         cmds.setAttr(full_name, **kwargs)
 
@@ -276,7 +295,7 @@ def connect_attribute():
                                  '{0}.{1}'.format(next_sel, attr), force=True)
         deselect_channels()
 
-        cmds.select(deselect=True)
+        # cmds.select(deselect=True)
 
 
 def disconnect_attribute():

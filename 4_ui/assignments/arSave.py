@@ -83,7 +83,7 @@ class ArSave:
         self.wgSave.lblComment.setText('Version Down')
 
     def press_btnOpenFolder(self):
-        webbrowser.open('self.open_path')
+        webbrowser.open(self.open_path)
 
     def press_btnUser(self):
         webbrowser.open('https://www.alexanderrichtertd.com')

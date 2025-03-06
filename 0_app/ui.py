@@ -3,132 +3,238 @@
 # version   = 0.1.0
 # date      = 2025-01-25
 #
-# how to    = draw_ui()
+# how to    = ui()
 # to dos    = add reorder attribute buttons.
 #
 # author    = Garvey Chi (garveychi@gmail.com)
 # *********************************************************************
 '''Creates the UI for launching channelbox tools.'''
 
+
+import os
 import importlib
+import webbrowser
 
 import maya.cmds as cmds
 
-import modify_channel_attrs as mod
+from Qt import QtGui, QtCore, QtCompat
 
+import modify_channel_attrs as mod
 importlib.reload(mod)
+
+# *********************************************************************
+# VARIABLES
+TITLE = os.path.splitext(os.path.basename(__file__))[0]
+CURRENT_PATH = os.path.dirname(__file__)
+IMG_PATH = CURRENT_PATH + "/img/icons/{}.png"
+
+# *********************************************************************
+# CLASS
 
 
 class Ui:
-    def __init__(self, name, title):
-        self.name = name
-        self.title = title
-        self.sep_height = 20
-        self.sep_style = 'none'
+    def __init__(self):
+        path_ui = '{}/ui/{}.ui'.format(CURRENT_PATH, TITLE)
+        self.wgUi = QtCompat.loadUi(path_ui)
+        self.wgUi.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
 
-        # *********************************************************************
-        # LAYOUT
-        self.create_window(name, title)
-        self.create_separator(self.sep_height, self.sep_style)
+        # ICON
+        self.wgUi.setWindowIcon(QtGui.QPixmap(IMG_PATH.format('btn_transform')))
 
-        cmds.rowLayout(numberOfColumns=2)
+        self.wgUi.btnResetChannels.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_reset')))
 
-        cmds.setParent(self.layout)
+        self.wgUi.btnMatchTransforms.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_transforms')))
+        self.wgUi.btnMatchTranslate.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_translate')))
+        self.wgUi.btnMatchRotate.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_rotate')))
+        self.wgUi.btnMatchScale.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_scale')))
+        self.wgUi.btnConnectAttribute.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_connect')))
+        self.wgUi.btnDisconnectAttribute.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_disconnect')))
 
-        # *********************************************************************
-        # BUTTONS
-        self.create_button('Reset Channels',
-                           lambda *args: mod.reset_channels(),
-                           True, '-- RESET ATTRIBUTES --')
-        self.create_button('Match Transforms',
-                           lambda *args: mod.match_attribute('all'),
-                           True, '-- MATCH ATTRIBUTES --')
-        self.create_button('Match Translate',
-                           lambda *args: mod.match_attribute('translate'))
-        self.create_button('Match Rotate',
-                           lambda *args: mod.match_attribute('rotate'))
-        self.create_button('Match Scale',
-                           lambda *args: mod.match_attribute('scale'))
+        self.wgUi.btnAddAttribute.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_add')))
+        self.wgUi.btnAddSeparator.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_separator')))
+        self.wgUi.btnDeleteAttribute.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_minus')))
 
-        self.attribute_name = cmds.textFieldGrp(label='Attribute Name:',
-                                                columnAlign=[1, 'left'],
-                                                text='new_attr')
-        self.attribute_type = cmds.optionMenuGrp(label='Attribute Type:',
-                                                 columnAlign=[1, 'left'])
-        self.enum_attr_name = cmds.textFieldGrp(label='Enum Names:',
-                                                columnAlign=[1, 'left'],
-                                                text='value1:value2:value3')
-        self.min_max_attrs = cmds.floatFieldGrp(label='Min/Max:',
-                                                numberOfFields=2,
-                                                columnAlign=[1, 'left'])
+        self.wgUi.btnLockUnlockAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_lock')))
+        self.wgUi.btnHideAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_hide')))
+        self.wgUi.btnLockHideAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_lockHide')))
+        self.wgUi.btnKeyUnkeyAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_keyable')))
+        self.wgUi.btnMuteAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_mute')))
+        self.wgUi.btnUnmuteAttr.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_unmute')))
+        self.wgUi.btnReorderUp.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_up')))
+        self.wgUi.btnReorderDown.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_down')))
 
-        for attr_type in ['bool', 'int', 'float', 'enum']:
-            self.create_menu_item(attr_type)
+        self.wgUi.btnHelp.setIcon(QtGui.QPixmap(IMG_PATH.format('btn_helpBlue')))
 
-        self.create_button('Add Attribute',
-                           lambda *args: mod.add_attribute(
-                               self.attribute_name,
-                               self.min_max_attrs,
-                               self.enum_attr_name,
-                               self.attribute_type),
-                           True, '-- ADD/DEL ATTRIBUTES --')
-        self.create_button('Add Separator',
-                           lambda *args: mod.add_separator(
-                               self.attribute_name))
-        self.create_button('Delete Attribute',
-                           lambda *args: mod.delete_attribute())
-        self.create_button('Lock/Unlock Attribute',
-                           lambda *args: mod.modify_attribute(
-                               keyable=True, lock=True, channelBox=False),
-                           True, '-- CHANNEL ATTRIBUTES --')
-        self.create_button('Hide Attribute',
-                           lambda *args: mod.modify_attribute(
-                               keyable=False, lock=False, channelBox=False))
-        self.create_button('Lock + Hide Attribute',
-                           lambda *args: mod.modify_attribute(
-                               keyable=False, lock=True, channelBox=False))
-        self.create_button('Keyable/Unkeyable Attribute',
-                           lambda *args: mod.modify_attribute(
-                               keyable=False, lock=False, channelBox=True))
-        self.create_button('Mute Attribute',
-                           lambda *args: mod.mute_attribute())
-        self.create_button('Unmute Attribute',
-                           lambda *args: mod.mute_attribute(
-                               disable=True, force=True))
-        self.create_button('^', lambda *args: mod.reorder_attribute())
-        self.create_button('v', lambda *args: mod.reorder_attribute())
+        # SIGNAL
+        self.wgUi.btnResetChannels.clicked.connect(self.press_btnResetChannels)
 
-        self.create_button('Connect Attributes',
-                           lambda *args: mod.connect_attribute(),
-                           True, '-- CONNECT ATTRIBUTES --')
-        self.create_button('Disconnect Attributes',
-                           lambda *args: mod.disconnect_attribute())
+        self.wgUi.btnMatchTransforms.clicked.connect(self.press_btnMatchTransforms)
+        self.wgUi.btnMatchTranslate.clicked.connect(self.press_btnMatchTranslate)
+        self.wgUi.btnMatchRotate.clicked.connect(self.press_btnMatchRotate)
+        self.wgUi.btnMatchScale.clicked.connect(self.press_btnMatchScale)
+        self.wgUi.btnConnectAttribute.clicked.connect(self.press_btnConnectAttribute)
+        self.wgUi.btnDisconnectAttribute.clicked.connect(self.press_btnDisconnectAttribute)
 
-        # *********************************************************************
-        # FORMATTING
-        self.create_separator(40, self.sep_style)
-        cmds.showWindow(self.window)
+        self.wgUi.btnAddAttribute.clicked.connect(self.press_btnAddAttribute)
+        self.wgUi.btnAddSeparator.clicked.connect(self.press_btnAddSeparator)
+        self.wgUi.btnDeleteAttribute.clicked.connect(self.press_btnDeleteAttribute)
 
-        # *********************************************************************
-        # FUNC
-    def create_window(self, name, title):
-        if cmds.window(name, exists=True):
-            cmds.deleteUI(name, window=True)
-        self.window = cmds.window(name, title=title, sizeable=False, resizeToFitChildren=True)
-        self.layout = cmds.rowColumnLayout(numberOfColumns=1, columnWidth=(1, 300))
+        self.wgUi.btnLockUnlockAttr.clicked.connect(self.press_btnLockUnlockAttr)
+        self.wgUi.btnHideAttr.clicked.connect(self.press_btnHideAttr)
+        self.wgUi.btnLockHideAttr.clicked.connect(self.press_btnLockHideAttr)
+        self.wgUi.btnKeyUnkeyAttr.clicked.connect(self.press_btnKeyUnkeyAttr)
+        self.wgUi.btnMuteAttr.clicked.connect(self.press_btnMuteAttr)
+        self.wgUi.btnUnmuteAttr.clicked.connect(self.press_btnUnmuteAttr)
+        self.wgUi.btnReorderUp.clicked.connect(self.press_btnReorderUp)
+        self.wgUi.btnReorderDown.clicked.connect(self.press_btnReorderDown)
 
-    def create_separator(self, height_value, style_type):
-        cmds.separator(height=height_value, style=style_type)
+        self.wgUi.btnHelp.clicked.connect(self.press_btnHelp)
 
-    def create_button(self, label_name, command, start=None, section=None):
-        if start:
-            self.create_separator(self.sep_height, 'singleDash')
-            cmds.text(label=section, align='center')
-            self.create_separator(self.sep_height, 'singleDash')
-        cmds.button(label=label_name, command=command)
+        # SETUP
+        self.wgUi.show()
 
-    def create_menu_item(self, attr_type):
-        cmds.menuItem(label=attr_type)
+    def attrNameInput(self):
+        attr_name = self.wgUi.editAttrName.text()
+        if not attr_name:
+            attr_name = 'new_attr'
+        return attr_name
+
+    def enumNamesInput(self):
+        enum_name = self.wgUi.editEnumNames.text()
+        if not enum_name:
+            enum_name = 'value1:value2:value3'
+        return enum_name
+
+    def changeMinValue(self):
+        min_value = self.wgUi.editMin.text()
+        return min_value
+
+    def changeMaxValue(self):
+        max_value = self.wgUi.editMax.text()
+        return max_value
+
+    def attrType(self):
+        attr_type = self.wgUi.cboxAttrType.currentText()  # QComboBox
+        return attr_type
+
+    # *********************************************************************
+    # PRESS
+    def press_btnResetChannels(self):
+        self.wgUi.lblPrintOut.setText('Reset Attributes')
+        cmds.undoInfo(openChunk=True)
+        mod.reset_channels()
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnMatchTransforms(self):
+        self.wgUi.lblPrintOut.setText('Match Transforms')
+        mod.match_attribute('all')
+
+    def press_btnMatchTranslate(self):
+        self.wgUi.lblPrintOut.setText('Match Translate')
+        mod.match_attribute('translate')
+
+    def press_btnMatchRotate(self):
+        self.wgUi.lblPrintOut.setText('Match Rotate')
+        mod.match_attribute('rotate')
+
+    def press_btnMatchScale(self):
+        self.wgUi.lblPrintOut.setText('Match Scale')
+        mod.match_attribute('scale')
+
+    def press_btnConnectAttribute(self):
+        self.wgUi.lblPrintOut.setText('Connect Attr')
+        cmds.undoInfo(openChunk=True)
+        mod.connect_attribute()
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnDisconnectAttribute(self):
+        self.wgUi.lblPrintOut.setText('Disconnect Attr')
+        cmds.undoInfo(openChunk=True)
+        mod.disconnect_attribute()
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnAddAttribute(self):
+        self.wgUi.lblPrintOut.setText('Add Attribute')
+        attr_name = self.attrNameInput()
+        enum_name = self.enumNamesInput()
+        min_value = float(self.changeMinValue())
+        max_value = float(self.changeMaxValue())
+        attr_type = self.attrType()
+        mod.add_attribute(attr_name=attr_name,
+                          min_value=min_value,
+                          max_value=max_value,
+                          enum_name=enum_name,
+                          attr_type=attr_type,
+                          )
+
+    def press_btnAddSeparator(self):
+        self.wgUi.lblPrintOut.setText('Add Separator')
+        attr_name = self.attrNameInput()
+        mod.add_separator(attr_name)
+
+    def press_btnDeleteAttribute(self):
+        self.wgUi.lblPrintOut.setText('Delete Attribute')
+        mod.delete_attribute()
+
+    def press_btnLockUnlockAttr(self):
+        self.wgUi.lblPrintOut.setText('Lock Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.modify_attribute(keyable=True, lock=True, channelBox=False)
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnHideAttr(self):
+        self.wgUi.lblPrintOut.setText('Hide Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.modify_attribute(keyable=False, lock=False, channelBox=False)
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnLockHideAttr(self):
+        self.wgUi.lblPrintOut.setText('Lock/Hide Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.modify_attribute(keyable=False, lock=True, channelBox=False)
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnKeyUnkeyAttr(self):
+        self.wgUi.lblPrintOut.setText('Keyable Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.modify_attribute(keyable=False, lock=False, channelBox=True)
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnMuteAttr(self):
+        self.wgUi.lblPrintOut.setText('Mute Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.mute_attribute()
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnUnmuteAttr(self):
+        self.wgUi.lblPrintOut.setText('Unmute Attribute')
+        cmds.undoInfo(openChunk=True)
+        mod.mute_attribute(disable=True, force=True)
+        cmds.undoInfo(closeChunk=True)
+
+    def press_btnReorderUp(self):
+        self.wgUi.lblPrintOut.setText('Reorder Attr Up')
+
+    def press_btnReorderDown(self):
+        self.wgUi.lblPrintOut.setText('Reorder Attr Down')
+
+    def press_btnHelp(self):
+        self.wgUi.lblPrintOut.setText('Opening Help Wiki')
+        webbrowser.open('https://github.com/g33cheese/modify-channelbox-attributes/wiki')
 
 
-ui_1 = Ui('channelboxToolWindow', 'ChannelBox Tools')
+# *********************************************************************
+# START UI
+if __name__ == "__main__":
+    # app = QtWidgets.QApplication(sys.argv)
+    ui = Ui()
+    # app.exec_()
+
+
+def load():
+    global ui
+    ui = Ui()
+    print('launching ui...')
+
+
+# load()

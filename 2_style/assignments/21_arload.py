@@ -1,3 +1,10 @@
+# STYLE ***************************************************************************
+# content = 2_style assignment
+#
+# date    = 2025-02-06
+# author  = Garvey Chi
+#************************************************************************************
+
 import os
 import re
 import sys
@@ -53,13 +60,11 @@ class ArLoad(ArUtil):
     def press_btnAccept(self):
         if not os.path.exists(self.load_file):
             self.set_status('FAILED LOADING : Path doesn\'t exists: {}'.format(
-                self.load_file), msg_type=3)
+                            self.load_file), msg_type=3)
             return False
-
 
     def press_menuItemAddFolder(self):
         self.save_as = arSaveAs.start(new_file=False)
-
 
     def press_menuSort(self, list_widget, reverse=False):
         file_list = []
@@ -88,7 +93,6 @@ class ArLoad(ArUtil):
             self.wgLoad.lstSet.addItems(sorted(tmp_content))
             self.wgLoad.lstSet.setCurrentRow(0)
 
-
     def change_lstSet(self):
         new_path = self.load_dir + '/' + self.wgLoad.lstSet.currentItem().text()
         tmp_content = libFunc.get_file_list(new_path)
@@ -104,10 +108,9 @@ class ArLoad(ArUtil):
                 self.wgLoad.lstAsset.addItems(sorted(tmp_content))
                 self.wgLoad.lstAsset.setCurrentRow(0)
 
-
     def change_lstAsset(self):
-        new_path = self.load_dir + '/' + self.wgLoad.lstSet.currentItem().text(
-            ) + '/' + self.wgLoad.lstAsset.currentItem().text()
+        new_path = self.load_dir + '/' + self.wgLoad.lstSet.currentItem().text() + \
+                   '/' + self.wgLoad.lstAsset.currentItem().text()
         tmp_content = libFunc.get_file_list(new_path)
         self.wgLoad.lstTask.clear()
 
@@ -125,12 +128,10 @@ class ArLoad(ArUtil):
         self.wgPreview.lblSize.setText(str("{0:.2f}".format(
             os.path.getsize(self.load_file)/(1024*1024.0)) + " MB"))
 
-
     def clear_meta(self):
         self.wgPreview.lblUser.setText('')
         self.wgPreview.lblTitle.setText('')
         self.wgPreview.lblDate.setText('')
-
 
 
 #******************************************************************************
